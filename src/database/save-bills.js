@@ -1,11 +1,8 @@
 const conn = require('./db')
 
+ function saveBills(conta, valor) {
 
-
-
-async function saveBills(conta, valor) {
-
-    return await conn.query(`
+    return  conn.query(`
         INSERT INTO billstopay (
             bill, 
             value
@@ -18,14 +15,3 @@ async function saveBills(conta, valor) {
 
 module.exports = saveBills
 
-// saveBills()
-
-// conn.query('SELECT * FROM billstopay', (err, rows, fields) => {
-//     if(!err) {
-//         console.log(`Resultado: ${rows[1].bill}`)
-//     } else {
-//         console.log(err)
-//     }
-// })
-
-// conn.query(`DELETE FROM billstopay`)
