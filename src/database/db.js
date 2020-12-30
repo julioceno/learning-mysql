@@ -1,16 +1,18 @@
 
-const mysql = require('mysql2')  
+const mysql = require('mysql2/promise')  
 
-const conn = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: "accounts"
-})
+async function connect() {
+    if (global.connection && global.connection.state !== 'disconnected')
+        return global.connection
 
-conn.connect( (e) => {
-    if (e) throw e; 
-})
+    const connection = await mysql.createConnection({ host: 'localhost', user: 'root', password: '', database: 'accounts' })
+    console.log('conectou')
+    global.connection = connection
+
+    return connection
+} 
+
+connect()
 
 
-module.exports = conn
+module.exports = connect

@@ -2,11 +2,9 @@ const express = require('express')
 const app = express()
 const path = require('path')
 
-const saveBills = require('./database/save-bills')
-const  conn  = require('./database/db')
+const databaseInteractions = require('./database/database-interactions')
 
 const nunjucks = require('nunjucks')
-
 nunjucks.configure( "src/views",{
     express: app,
     noCache: true
@@ -20,16 +18,9 @@ app
     .get('/', async (req, resp) => {
         try {
 
-            conn.query(`DELETE FROM billstopay WHERE id = "21"`)
+            const results  = await databaseInteractions.getRows()
 
-            await conn.execute(`SELECT * FROM billstopay`,
-            (err, results) => {
-                resp.render('index.html', {results})
-            
-                if (err) console.log(err)
-            }
-            )
-
+            resp.render('index.html', {results})
         } catch(e) {
 
             console.log(e)
@@ -40,12 +31,8 @@ app
     .post('/post', async (req, resp) => {
 
         const field = req.body
-
         try {
-
-            console.log(field)
-
-             saveBills(field.bill, field.value)
+            await databaseInteractions.saveBills({ bill: field.bill, value: field.value })
 
             resp.redirect('/')
         } catch(e) {
